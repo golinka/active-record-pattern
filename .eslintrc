@@ -1,0 +1,23 @@
+{
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "extends": "airbnb-base",
+  "rules": {
+    "comma-dangle": ["error", "never"],
+    "no-bitwise": "off",
+    "no-plusplus": "off",
+    "arrow-parens": ["error", "as-needed"],
+    "no-param-reassign": ["error", { "props": false }],
+    "max-len": ["error", 120]
+  },
+  "globals": {
+    "use": true,
+    "getHouse": true,
+    "removeHouse": true,
+    "addHouse": true
+  }
+}
