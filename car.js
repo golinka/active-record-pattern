@@ -6,11 +6,11 @@ class Car extends Model {
   }
 
   constructor() {
+    super();
+    
     this.pk = 'id';
     this.fields = ['id', 'user_id', 'model', 'year'];
-
-    super();
   }
 }
 
-module.exports = User;
+module.exports = Car;
