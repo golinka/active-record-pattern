@@ -17,27 +17,19 @@ global.db.query = util.promisify(global.db.query);
 // Get user
 // const user = new User();
 // user.load(1)
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   });
+//   .then(data => console.log(data))
+//   .catch(error => console.log(error));
 
 // Get all users
 // User.loadAll()
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   });
+//   .then(data => console.log(data))
+//   .catch(error => console.log(error));
 
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
 
 
 // Создать нового пользователя [Done]
-const createUser = new User();
+// const createUser = new User();
 // createUser.data = {
 //   first_name: 'Artem',
 //   last_name: 'Holinka',
@@ -45,12 +37,8 @@ const createUser = new User();
 //   gender: 'F'
 // };
 // createUser.save()
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   });
+//   .then(data => console.log(data))
+//   .catch(error => console.log(error));
 
 
 // // Изменить имя пользователю [Done]
@@ -58,21 +46,22 @@ const createUser = new User();
 //   first_name: 'Vlad'
 // };
 // createUser.save(2)
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   });
+//   .then(data => console.log(data))
+//   .catch(error => console.log(error));
 
 // Удалить пользователя [Done]
 // const deleteUser = new User();
 // deleteUser.delete(13)
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   });
+  // .then(data => console.log(data))
+  // .catch(error => console.log(error));
 
 // Добавить пользователю новую машину
+const happyUser = new User();
+happyUser.car = {
+  user_id: 6,
+  model: 'Audi',
+  year: 2016
+};
+happyUser.addCar()
+  .then(data => console.log(data))
+  .catch(error => console.log(error));
