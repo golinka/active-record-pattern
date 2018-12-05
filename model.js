@@ -1,59 +1,58 @@
 class Model {
 
-  save() {
-    const [ id, first_name, last_name, age, gender ] = this.fields;
-    let query = null;
+  static doQuery(query) {
+    return new Promise((resolve, reject) => {
+      global.db.query(query)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(error => {
+          reject(error.message);
+        });
+    })
+  }
 
-    if (this.pk !== 'id') {
-      query = `INSERT INTO ${this.constructor.table()} VALUES (${id}, "${first_name}", "${last_name}", ${age}, "${gender}")`;
+  static loadAll() {
+    const dbQuery = `SELECT * FROM ${this.table()}`;
+    return this.doQuery(dbQuery);
+  }
+
+  load(id) {
+    const dbQuery = `SELECT * FROM ${this.constructor.table()} WHERE ${this.pk} = ${id}`;
+    return Model.doQuery(dbQuery);
+  }
+
+  save(id) {
+    const fields = Object.keys(this.data).join(', ');
+    const values = Object.values(this.data).map(value => {
+      return typeof value === 'string' ? `'${value}'` : value;
+    }).join(', ');
+
+    let keysValues = '';
+    for (let key in this.data) {
+      if (this.data.hasOwnProperty(key)) {
+        if (typeof this.data[key] === 'string') {
+          keysValues += `${key} = '${this.data[key]}', `;
+        } else {
+          keysValues += `${key} = ${this.data[key]}, `;
+        }
+      }
+    }
+    keysValues = keysValues.slice(0, -2); // remove the extra ', '
+
+    let dbQuery = null;
+    if (typeof id === 'undefined') {
+      dbQuery = `INSERT INTO ${this.constructor.table()} (${fields}) VALUES (${values})`;
     } else {
-      query = `UPDATE ${this.constructor.table()} SET id = ${id}, first_name = "${first_name}", last_name = "${last_name}", age = ${age}, gender = "${gender}" WHERE id = ${id}`;
+      dbQuery = `UPDATE ${this.constructor.table()} SET ${keysValues} WHERE ${this.pk} = ${id}`;
     }
 
-    global.db.query(query)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
-      });
+    return Model.doQuery(dbQuery);
   }
 
-  // Not done
-  async load(pk) {
-    if (typeof this.hasMany === 'object') {
-      // do some with model
-      const user = await global.db.query(`SELECT * FROM ${this.constructor.table()} WHERE id = ${this.pk}`);
-      user.cars = [];
-      user.cars.push('Porshe');
-      // console.log(user);
-      const cars = this.hasMany.model.load(this.pk);
-      console.log(cars);
-    } else {
-      const cars = await global.db.query(`SELECT * FROM ${this.hasMany.model.constructor.table()} WHERE id = ${pk}`);
-    }
-
-    console.log();
-  }
-
-  loadAll() {
-    global.db.query(`SELECT * FROM ${this.constructor.table()}`)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
-      });
-  }
-
-  delete() {
-    global.db.query(`DELETE FROM ${this.constructor.table()} WHERE id = ${this.pk}`)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
-      });
+  delete(id) {
+    const dbQuery = `DELETE FROM ${this.constructor.table()} WHERE ${this.pk} = ${id}`;
+    return Model.doQuery(dbQuery);
   }
 }
 

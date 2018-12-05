@@ -14,26 +14,65 @@ global.db = mysql.createConnection({
 
 global.db.query = util.promisify(global.db.query);
 
+// Get user
+// const user = new User();
+// user.load(1)
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   });
+
+// Get all users
+// User.loadAll()
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   });
 
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
-// const user = new User();
-// user.pk = 2;
-// user.load();
+
 
 // Создать нового пользователя [Done]
-// const createUser = new User();
-// createUser.pk = 5;
-// createUser.fields = [createUser.pk, 'Artem', 'Holinka', 22, 'M'];
-// createUser.save();
+const createUser = new User();
+// createUser.data = {
+//   first_name: 'Artem',
+//   last_name: 'Holinka',
+//   age: 22,
+//   gender: 'F'
+// };
+// createUser.save()
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   });
+
 
 // // Изменить имя пользователю [Done]
-// const updateUser = new User();
-// updateUser.fields = [5, 'Vlad', 'Ivanov', 25, 'M'];
-// updateUser.save();
+// createUser.data = {
+//   first_name: 'Vlad'
+// };
+// createUser.save(2)
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   });
 
 // Удалить пользователя [Done]
 // const deleteUser = new User();
-// deleteUser.pk = 5;
-// deleteUser.delete();
+// deleteUser.delete(13)
+//   .then(data => {
+//     console.log(data)
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   });
 
 // Добавить пользователю новую машину
