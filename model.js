@@ -1,15 +1,13 @@
 class Model {
 
   static doQuery(query) {
-    return new Promise((resolve, reject) => {
-      global.db.query(query)
-        .then(result => {
-          resolve(result);
-        })
-        .catch(error => {
-          reject(error.message);
-        });
+    return global.db.query(query)
+    .then(result => {
+      return result;
     })
+    .catch(error => {
+      return error.message;
+    });
   }
 
   static loadAll() {
