@@ -20,36 +20,42 @@ class Model {
     return Model.doQuery(dbQuery);
   }
 
-  save(id) {
-    const fields = Object.keys(this.data).join(', ');
-    const values = Object.values(this.data).map(value => {
-      return typeof value === 'string' ? `'${value}'` : value;
-    }).join(', ');
+  save() {
+    let dbQuery = null;
+    if (!this.alreadySaved) {
+      const fields = Object.keys(this.data).join(', ');
+      const values = Object.values(this.data).map(value => {
+        return typeof value === 'string' ? `'${value}'` : value;
+      }).join(', ');
 
-    let keysValues = '';
-    for (let key in this.data) {
-      if (this.data.hasOwnProperty(key)) {
+      dbQuery = `INSERT INTO ${this.constructor.table()} (${fields}) VALUES (${values})`;
+      return Model.doQuery(dbQuery)
+        .then(response => {
+          this.alreadySaved = true;
+          this.data.id = response.insertId;
+        });
+    } else {
+      let keysValues = '';
+      const keys = Object.keys(this.data);
+
+      keys.map(key => {
         if (typeof this.data[key] === 'string') {
           keysValues += `${key} = '${this.data[key]}', `;
         } else {
           keysValues += `${key} = ${this.data[key]}, `;
         }
-      }
-    }
-    keysValues = keysValues.slice(0, -2); // remove the extra ', '
+      });
 
-    let dbQuery = null;
-    if (typeof id === 'undefined') {
-      dbQuery = `INSERT INTO ${this.constructor.table()} (${fields}) VALUES (${values})`;
-    } else {
-      dbQuery = `UPDATE ${this.constructor.table()} SET ${keysValues} WHERE ${this.pk} = ${id}`;
-    }
+      keysValues = keysValues.slice(0, -2); // remove the extra ', '
+      console.log(keysValues);
 
-    return Model.doQuery(dbQuery);
+      dbQuery = `UPDATE ${this.constructor.table()} SET ${keysValues} WHERE ${this.pk} = ${this.data.id}`;
+      return Model.doQuery(dbQuery);
+    }
   }
 
-  delete(id) {
-    const dbQuery = `DELETE FROM ${this.constructor.table()} WHERE ${this.pk} = ${id}`;
+  delete() {
+    const dbQuery = `DELETE FROM ${this.constructor.table()} WHERE ${this.pk} = ${this.data.id}`;
     return Model.doQuery(dbQuery);
   }
 

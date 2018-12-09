@@ -29,39 +29,22 @@ global.db.query = util.promisify(global.db.query);
 
 
 // Создать нового пользователя [Done]
-// const createUser = new User();
-// createUser.data = {
-//   first_name: 'Artem',
-//   last_name: 'Holinka',
-//   age: 22,
-//   gender: 'F'
-// };
-// createUser.save()
-//   .then(data => console.log(data))
-//   .catch(error => console.log(error));
+(async function () {
+  const createUser = new User();
+  createUser.data = {
+    first_name: 'Artem',
+    last_name: 'Holinka',
+    age: 22,
+    gender: 'F'
+  };
+  await createUser.save();
 
+  // Изменить имя пользователю [Done]
+  createUser.data.first_name = 'Vlad'
+  await createUser.save();
 
-// // Изменить имя пользователю [Done]
-// createUser.data = {
-//   first_name: 'Vlad'
-// };
-// createUser.save(2)
-//   .then(data => console.log(data))
-//   .catch(error => console.log(error));
-
-// Удалить пользователя [Done]
-// const deleteUser = new User();
-// deleteUser.delete(13)
-  // .then(data => console.log(data))
-  // .catch(error => console.log(error));
+  // Удалить пользователя [Done]
+  await createUser.delete();
+})();
 
 // Добавить пользователю новую машину
-const happyUser = new User();
-happyUser.car = {
-  user_id: 6,
-  model: 'Audi',
-  year: 2016
-};
-happyUser.addCar()
-  .then(data => console.log(data))
-  .catch(error => console.log(error));
