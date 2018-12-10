@@ -15,11 +15,6 @@ class Model {
     return this.doQuery(dbQuery);
   }
 
-  load(id) {
-    const dbQuery = `SELECT * FROM ${this.constructor.table()} WHERE ${this.pk} = ${id}`;
-    return Model.doQuery(dbQuery);
-  }
-
   save() {
     let dbQuery = null;
     if (!this.alreadySaved) {
@@ -47,7 +42,6 @@ class Model {
       });
 
       keysValues = keysValues.slice(0, -2); // remove the extra ', '
-      console.log(keysValues);
 
       dbQuery = `UPDATE ${this.constructor.table()} SET ${keysValues} WHERE ${this.pk} = ${this.data.id}`;
       return Model.doQuery(dbQuery);

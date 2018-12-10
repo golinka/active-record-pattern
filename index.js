@@ -15,10 +15,10 @@ global.db = mysql.createConnection({
 global.db.query = util.promisify(global.db.query);
 
 // Get user
-// const user = new User();
-// user.load(1)
-//   .then(data => console.log(data))
-//   .catch(error => console.log(error));
+(async function() {
+  const user136 = await User.load(136);
+  console.log(user136);
+})();
 
 // Get all users
 // User.loadAll()

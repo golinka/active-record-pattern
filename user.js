@@ -6,6 +6,11 @@ class User extends Model {
     return 'users';
   }
 
+  static load(id) {
+    const dbQuery = `SELECT * FROM ${this.table()} WHERE id = ${id}`;
+    return Model.doQuery(dbQuery);
+  }
+
   constructor() {
     super();
     

@@ -5,6 +5,11 @@ class Car extends Model {
     return 'cars';
   }
 
+  static load(id) {
+    const dbQuery = `SELECT * FROM ${this.table()} WHERE id = ${id}`;
+    return Model.doQuery(dbQuery);
+  }
+
   constructor() {
     super();
     
