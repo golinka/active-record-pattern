@@ -14,6 +14,14 @@ class User extends Model {
     return obj;
   }
 
+  async addCar(car) {
+    const user_id = this.data[this.hasMany[0].primaryKey];
+    car.data[this.hasMany[0].foreignKey] = user_id;
+    
+    await car.save();
+    this.car = { ...car.data };
+  }
+
   constructor() {
     super();
     

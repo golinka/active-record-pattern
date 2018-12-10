@@ -58,12 +58,6 @@ class Model {
     const dbQuery = `DELETE FROM ${this.constructor.table()} WHERE ${this.pk} = ${this.data.id}`;
     return Model.doQuery(dbQuery);
   }
-
-  addCar() {
-    const car = new this.hasMany[0].model();
-    car.data = this.car;
-    return car.save();
-  }
 }
 
 module.exports = Model;

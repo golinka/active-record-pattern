@@ -17,16 +17,9 @@ global.db.query = util.promisify(global.db.query);
 // Get all users
 (async function() {
   const allUsers = await User.loadAll();
-  console.log(allUsers);
 })();
 
-// Get all users
-// User.loadAll()
-//   .then(data => console.log(data))
-//   .catch(error => console.log(error));
-
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
-
 
 // Создать нового пользователя [Done]
 (async function () {
@@ -48,3 +41,14 @@ global.db.query = util.promisify(global.db.query);
 })();
 
 // Добавить пользователю новую машину
+(async function () {
+  const newCar = new Car();
+  newCar.data = {
+    model: 'Audi',
+    year: 2009
+  };
+
+  const happyUser = await User.load(136);
+  await happyUser.addCar(newCar);
+  console.log(happyUser);
+})();
