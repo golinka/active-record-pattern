@@ -52,7 +52,7 @@ class Model {
 
   save() {
     let dbQuery = null;
-    if (!this.alreadySaved) {
+    if (!this.data.id) {
       const fields = Object.keys(this.data).join(', ');
       const values = Object.values(this.data).map(value => {
         return typeof value === 'string' ? `'${value}'` : value;
@@ -61,7 +61,6 @@ class Model {
       dbQuery = `INSERT INTO ${this.constructor.table()} (${fields}) VALUES (${values})`;
       return Model.doQuery(dbQuery)
         .then(response => {
-          this.alreadySaved = true;
           this.data.id = response.insertId;
         });
     } else {

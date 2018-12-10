@@ -15,35 +15,35 @@ global.db = mysql.createConnection({
 global.db.query = util.promisify(global.db.query);
 
 // Get all users
-(async function() {
-  const allUsers = await User.loadAll();
-})();
+// (async function() {
+//   const allUsers = await User.loadAll();
+// })();
 
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
-(async function () {
-  const user = await User.load(2);
-  console.log(user);
-})();
+// (async function () {
+//   const user = await User.load(2);
+//   console.log(user);
+// })();
 
 
 // Создать нового пользователя [Done]
-(async function () {
-  const createUser = new User();
-  createUser.data = {
-    first_name: 'Artem',
-    last_name: 'Holinka',
-    age: 22,
-    gender: 'F'
-  };
-  await createUser.save();
+// (async function () {
+//   const createUser = new User();
+//   createUser.data = {
+//     first_name: 'Artem',
+//     last_name: 'Holinka',
+//     age: 22,
+//     gender: 'F'
+//   };
+//   await createUser.save();
 
-  // Изменить имя пользователю [Done]
-  createUser.data.first_name = 'Vlad'
-  await createUser.save();
+//   // Изменить имя пользователю [Done]
+//   createUser.data.first_name = 'Vlad'
+//   await createUser.save();
 
-  // Удалить пользователя [Done]
-  await createUser.delete();
-})();
+//   // Удалить пользователя [Done]
+//   await createUser.delete();
+// })();
 
 
 // Добавить пользователю новую машину
@@ -54,7 +54,7 @@ global.db.query = util.promisify(global.db.query);
     year: 2009
   };
 
-  const happyUser = User.load(1);
+  const happyUser = await User.load(1);
   await happyUser.addCar(newCar);
   console.log(happyUser);
 })();

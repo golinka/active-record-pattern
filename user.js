@@ -9,15 +9,15 @@ class User extends Model {
   async addCar(car) {
     const tableName = car.constructor.table();
     const user_id = this.data[this.hasMany[0].primaryKey];
-    car.data[this.hasMany[0].foreignKey] = user_id;
 
+    car.data[this.hasMany[0].foreignKey] = user_id;
     await car.save();
 
     if (typeof this[tableName] !== 'undefined') {
-      this[tableName].push(car.data);
+      this[tableName].push(car);
     } else {
       this[tableName] = [];
-      this[tableName].push(car.data);
+      this[tableName].push(car);
     }
   }
 
