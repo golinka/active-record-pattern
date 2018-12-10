@@ -14,26 +14,47 @@ global.db = mysql.createConnection({
 
 global.db.query = util.promisify(global.db.query);
 
+// Get all users
+(async function() {
+  const allUsers = await User.loadAll();
+})();
 
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
-// const user = new User();
-// user.pk = 2;
-// user.load();
+(async function () {
+  const user = await User.load(2);
+  console.log(user);
+})();
+
 
 // Создать нового пользователя [Done]
-// const createUser = new User();
-// createUser.pk = 5;
-// createUser.fields = [createUser.pk, 'Artem', 'Holinka', 22, 'M'];
-// createUser.save();
+(async function () {
+  const createUser = new User();
+  createUser.data = {
+    first_name: 'Artem',
+    last_name: 'Holinka',
+    age: 22,
+    gender: 'F'
+  };
+  await createUser.save();
 
-// // Изменить имя пользователю [Done]
-// const updateUser = new User();
-// updateUser.fields = [5, 'Vlad', 'Ivanov', 25, 'M'];
-// updateUser.save();
+  // Изменить имя пользователю [Done]
+  createUser.data.first_name = 'Vlad'
+  await createUser.save();
 
-// Удалить пользователя [Done]
-// const deleteUser = new User();
-// deleteUser.pk = 5;
-// deleteUser.delete();
+  // Удалить пользователя [Done]
+  await createUser.delete();
+})();
+
 
 // Добавить пользователю новую машину
+(async function () {
+  const newCar = new Car();
+  newCar.data = {
+    model: 'Audi',
+    year: 2009
+  };
+
+  const happyUser = await User.load(1);
+  await happyUser.addCar(newCar);
+  console.log(happyUser);
+})();

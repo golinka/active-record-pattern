@@ -1,59 +1,90 @@
 class Model {
 
+  static doQuery(query) {
+    return global.db.query(query)
+    .then(result => {
+      return result;
+    })
+    .catch(error => {
+      return error.message;
+    });
+  }
+
+  static async loadAll() {
+    const dbQuery = `SELECT * FROM ${this.table()}`;
+    const response = await this.doQuery(dbQuery);
+    const classObjects = response.map(data => {
+      const obj = new this();
+      obj.data = data;
+      return obj;
+    });
+    return classObjects;
+  }
+
+  static async load(id) {
+    const obj = new this();
+    const childModel = new this.prototype.constructor();
+    
+    if (typeof childModel.hasMany !== 'undefined') {
+      childModel.hasMany.map(async (hasIt) => {
+        const hasItAll = await hasIt.model.loadAll();
+        const itTable = hasIt.model.table();
+        const hasItFK = hasIt.foreignKey;
+
+        const has = hasItAll.filter(item => {
+          if (item.data[hasItFK] === id) {
+            const itemObject = new hasIt.model;
+            itemObject.data = item;
+            return itemObject;
+          }
+        });
+
+        obj[itTable] = has;
+      });
+    }
+
+    const dbQuery = `SELECT * FROM ${this.table()} WHERE ${childModel.pk} = ${id}`;
+    const response = await Model.doQuery(dbQuery);
+
+    obj.data = response[0];
+    return obj;
+  }
+
   save() {
-    const [ id, first_name, last_name, age, gender ] = this.fields;
-    let query = null;
+    let dbQuery = null;
+    if (!this.data.id) {
+      const fields = Object.keys(this.data).join(', ');
+      const values = Object.values(this.data).map(value => {
+        return typeof value === 'string' ? `'${value}'` : value;
+      }).join(', ');
 
-    if (this.pk !== 'id') {
-      query = `INSERT INTO ${this.constructor.table()} VALUES (${id}, "${first_name}", "${last_name}", ${age}, "${gender}")`;
+      dbQuery = `INSERT INTO ${this.constructor.table()} (${fields}) VALUES (${values})`;
+      return Model.doQuery(dbQuery)
+        .then(response => {
+          this.data.id = response.insertId;
+        });
     } else {
-      query = `UPDATE ${this.constructor.table()} SET id = ${id}, first_name = "${first_name}", last_name = "${last_name}", age = ${age}, gender = "${gender}" WHERE id = ${id}`;
-    }
+      let keysValues = '';
+      const keys = Object.keys(this.data);
 
-    global.db.query(query)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
+      keys.map(key => {
+        if (typeof this.data[key] === 'string') {
+          keysValues += `${key} = '${this.data[key]}', `;
+        } else {
+          keysValues += `${key} = ${this.data[key]}, `;
+        }
       });
-  }
 
-  // Not done
-  async load(pk) {
-    if (typeof this.hasMany === 'object') {
-      // do some with model
-      const user = await global.db.query(`SELECT * FROM ${this.constructor.table()} WHERE id = ${this.pk}`);
-      user.cars = [];
-      user.cars.push('Porshe');
-      // console.log(user);
-      const cars = this.hasMany.model.load(this.pk);
-      console.log(cars);
-    } else {
-      const cars = await global.db.query(`SELECT * FROM ${this.hasMany.model.constructor.table()} WHERE id = ${pk}`);
+      keysValues = keysValues.slice(0, -2); // remove the extra ', '
+
+      dbQuery = `UPDATE ${this.constructor.table()} SET ${keysValues} WHERE ${this.pk} = ${this.data.id}`;
+      return Model.doQuery(dbQuery);
     }
-
-    console.log();
-  }
-
-  loadAll() {
-    global.db.query(`SELECT * FROM ${this.constructor.table()}`)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
-      });
   }
 
   delete() {
-    global.db.query(`DELETE FROM ${this.constructor.table()} WHERE id = ${this.pk}`)
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(error => {
-        console.log(error)
-      });
+    const dbQuery = `DELETE FROM ${this.constructor.table()} WHERE ${this.pk} = ${this.data.id}`;
+    return Model.doQuery(dbQuery);
   }
 }
 
