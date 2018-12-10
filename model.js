@@ -10,9 +10,15 @@ class Model {
     });
   }
 
-  static loadAll() {
+  static async loadAll() {
     const dbQuery = `SELECT * FROM ${this.table()}`;
-    return this.doQuery(dbQuery);
+    const response = await this.doQuery(dbQuery);
+    const classObjects = response.map(data => {
+      const obj = new this();
+      obj.data = data;
+      return obj;
+    });
+    return classObjects;
   }
 
   save() {

@@ -14,10 +14,10 @@ global.db = mysql.createConnection({
 
 global.db.query = util.promisify(global.db.query);
 
-// Get user
+// Get all users
 (async function() {
-  const user136 = await User.load(136);
-  console.log(user136);
+  const allUsers = await User.loadAll();
+  console.log(allUsers);
 })();
 
 // Get all users

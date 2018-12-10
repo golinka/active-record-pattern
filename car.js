@@ -5,9 +5,12 @@ class Car extends Model {
     return 'cars';
   }
 
-  static load(id) {
+  static async load(id) {
+    const obj = new this();
     const dbQuery = `SELECT * FROM ${this.table()} WHERE id = ${id}`;
-    return Model.doQuery(dbQuery);
+    const response = await Model.doQuery(dbQuery);
+    obj.data = response[0];
+    return obj;
   }
 
   constructor() {
