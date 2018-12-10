@@ -20,6 +20,11 @@ global.db.query = util.promisify(global.db.query);
 })();
 
 // Открыть с БД и вывести в консоль сузествующего пользователя с машинами [Not done]
+(async function () {
+  const user = await User.load(2);
+  console.log(user);
+})();
+
 
 // Создать нового пользователя [Done]
 (async function () {
@@ -40,6 +45,7 @@ global.db.query = util.promisify(global.db.query);
   await createUser.delete();
 })();
 
+
 // Добавить пользователю новую машину
 (async function () {
   const newCar = new Car();
@@ -48,7 +54,7 @@ global.db.query = util.promisify(global.db.query);
     year: 2009
   };
 
-  const happyUser = await User.load(136);
+  const happyUser = User.load(1);
   await happyUser.addCar(newCar);
   console.log(happyUser);
 })();

@@ -6,20 +6,19 @@ class User extends Model {
     return 'users';
   }
 
-  static async load(id) {
-    const obj = new this();
-    const dbQuery = `SELECT * FROM ${this.table()} WHERE id = ${id}`;
-    const response = await Model.doQuery(dbQuery);
-    obj.data = response[0];
-    return obj;
-  }
-
   async addCar(car) {
+    const tableName = car.constructor.table();
     const user_id = this.data[this.hasMany[0].primaryKey];
     car.data[this.hasMany[0].foreignKey] = user_id;
-    
+
     await car.save();
-    this.car = { ...car.data };
+
+    if (typeof this[tableName] !== 'undefined') {
+      this[tableName].push(car.data);
+    } else {
+      this[tableName] = [];
+      this[tableName].push(car.data);
+    }
   }
 
   constructor() {

@@ -21,6 +21,35 @@ class Model {
     return classObjects;
   }
 
+  static async load(id) {
+    const obj = new this();
+    const childModel = new this.prototype.constructor();
+    
+    if (typeof childModel.hasMany !== 'undefined') {
+      childModel.hasMany.map(async (hasIt) => {
+        const hasItAll = await hasIt.model.loadAll();
+        const itTable = hasIt.model.table();
+        const hasItFK = hasIt.foreignKey;
+
+        const has = hasItAll.filter(item => {
+          if (item.data[hasItFK] === id) {
+            const itemObject = new hasIt.model;
+            itemObject.data = item;
+            return itemObject;
+          }
+        });
+
+        obj[itTable] = has;
+      });
+    }
+
+    const dbQuery = `SELECT * FROM ${this.table()} WHERE ${childModel.pk} = ${id}`;
+    const response = await Model.doQuery(dbQuery);
+
+    obj.data = response[0];
+    return obj;
+  }
+
   save() {
     let dbQuery = null;
     if (!this.alreadySaved) {
